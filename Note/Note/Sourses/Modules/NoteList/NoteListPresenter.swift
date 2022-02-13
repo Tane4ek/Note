@@ -20,10 +20,7 @@ extension NoteListPresenter: NoteListViewOutput {
     
     func viewWillAppear() {
         models = noteServise?.notes() ?? []
-//        models = noteServise?.notesFromDataBase() ?? []
         view?.reloadUI()
-        print("ID из кошельков", models.first?.id)
-        
     }
     
     func didSelectRowAt(index: Int) {

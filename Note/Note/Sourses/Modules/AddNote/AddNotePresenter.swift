@@ -61,12 +61,9 @@ extension AddNotePresenter: AddNoteViewOutput {
         return
         }
     
-    func changeTextStyleButtonTapped() {
-        router?.showTextStyleModule()
-        }
-    
     func addNewNoteButtonTapped() {
-            
+        let emptyNote = Note(id: UUID(), name: "", text: "", dateOfLastChange: Date.now)
+        router?.showAddNoteModule(note: emptyNote)
         }
     
     func deleteNoteButtonTapped() {

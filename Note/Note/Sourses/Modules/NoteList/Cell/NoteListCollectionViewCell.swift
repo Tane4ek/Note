@@ -36,12 +36,17 @@ class NoteListCollectionViewCell: UICollectionViewCell {
     private var note = UILabel(frame: .zero)
     private var dateOfLastChange = UILabel(frame: .zero)
     
+//    MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
         setupUICell()
     }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+//  MARK: - Setup UI
     private func setupUICell() {
         setupContainerView()
         setupName()
@@ -61,32 +66,35 @@ class NoteListCollectionViewCell: UICollectionViewCell {
     
     private func setupName() {
         name.font = UIFont.boldSystemFont(ofSize: 24)
-        name.textColor = .black
+        name.textColor = UIColor(named: "Coral")
         name.minimumScaleFactor = 0.5
         name.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(name)
+        containerView.addSubview(name)
     }
     
     private func setupChevron() {
-        chevron.image = UIImage(named: "chevron")
+        chevron.image = UIImage(systemName: "chevron.right")
+        chevron.tintColor = UIColor(named: "Coral")
         chevron.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(chevron)
+        containerView.addSubview(chevron)
     }
     
     private func setupLabelNote() {
         note.font = UIFont.systemFont(ofSize: 18)
         note.textColor = .black
         note.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(note)
+        containerView.addSubview(note)
     }
     
     private func setupDateOfLastChange() {
-        dateOfLastChange.font = UIFont.systemFont(ofSize: 18)
+        dateOfLastChange.font = UIFont.systemFont(ofSize: 16)
         dateOfLastChange.textColor = .black
         dateOfLastChange.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(dateOfLastChange)
+        containerView.addSubview(dateOfLastChange)
     }
     
+    
+//    MARK: - Layout
     private func setupLayoutCell() {
         NSLayoutConstraint.activate([
             containerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Paddings.horizontalInset),
@@ -111,17 +119,14 @@ class NoteListCollectionViewCell: UICollectionViewCell {
         ])
     }
     
+    
+//    MARK: - Configure
     func configure (model: Note) {
         name.text = model.name
         note.text = model.text
-//        containerView.backgroundColor = UIColor(named: model.colorName)
         let formatter = DateFormatter()
         formatter.dateFormat = "dd.MM.yyyy HH:mm:ss"
         dateOfLastChange.text = formatter.string(from: model.dateOfLastChange)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }
 

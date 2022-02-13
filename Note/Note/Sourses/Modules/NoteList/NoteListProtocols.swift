@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 protocol NoteListViewInput: AnyObject {
     
@@ -23,4 +24,8 @@ protocol NoteListViewOutput: AnyObject {
     func numberOfItems() -> Int
     
     func modelOfIndex(index: Int) -> Note
+}
+
+protocol SwipeableCollectionViewCellDelegate: AnyObject {
+    func hiddenConteinerViewTapped(inCell cell: UICollectionViewCell)
 }

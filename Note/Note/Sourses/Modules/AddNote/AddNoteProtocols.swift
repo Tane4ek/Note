@@ -35,8 +35,6 @@ protocol AddNoteViewOutput: AnyObject {
     
     func addPhotoButtonTapped()
     
-    func changeTextStyleButtonTapped()
-    
     func addNewNoteButtonTapped()
     
     func deleteNoteButtonTapped() 

@@ -13,12 +13,12 @@ class AddNoteViewController: UIViewController {
         static let subviewInset: CGFloat = 10
         
         enum BottomStackView {
-            static let height: CGFloat = 30
+            static let height: CGFloat = 50
             static let bottomInset: CGFloat = 300
         }
         
-        enum BottomStyleTextView {
-            static let height: CGFloat = 300
+        enum BottomStyleView {
+            static let height: CGFloat = 120
             static let subviewInset: CGFloat = 10
         }
     }
@@ -46,6 +46,7 @@ class AddNoteViewController: UIViewController {
     
     private var bottomStyleView = UIView(frame: .zero)
     private var buttonClosebottomStyleView = UIButton(frame: .zero)
+    private var buttonPaintbrush = UIButton(frame: .zero)
     private var formatLabel = UILabel(frame: .zero)
     private var styleStackView = UIStackView(frame: .zero)
     private var buttonName = UIButton(frame: .zero)
@@ -145,8 +146,6 @@ class AddNoteViewController: UIViewController {
     private func setupBottomStyleView() {
         bottomStyleView.backgroundColor = UIColor.white
         bottomStyleView.isHidden = true
-        bottomStyleView.layer.borderColor = UIColor.lightGray.cgColor
-        bottomStyleView.layer.borderWidth = 1
         bottomStyleView.layer.shadowColor = UIColor.lightGray.cgColor
         bottomStyleView.layer.shadowRadius = 5
         bottomStyleView.layer.shadowOpacity = 0.5
@@ -154,10 +153,44 @@ class AddNoteViewController: UIViewController {
         bottomStyleView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(bottomStyleView)
         setupButtonCloseBottomStyleView()
+        setupButtonPaintbrush()
         setupformatLabel()
         setupStyleStackView()
         
     }
+    
+    private func setupButtons() {
+        
+        buttonAddPhoto = buttonsStyle(image: "camera")
+        buttonAddPhoto.addTarget(self, action: #selector(addPhotoButtonTapped(_:)), for: .touchUpInside)
+        bottomStackView.addArrangedSubview(buttonAddPhoto)
+    
+        buttonChangeTextStyle = buttonsStyle(image: "square.and.pencil")
+        buttonChangeTextStyle.addTarget(self, action: #selector(changeTextStyleButtonTapped(_:)), for: .touchUpInside)
+        bottomStackView.addArrangedSubview(buttonChangeTextStyle)
+        
+        buttonAddNewNote = buttonsStyle(image: "plus")
+        buttonAddNewNote.addTarget(self, action: #selector(addNewNoteButtonTapped(_:)), for: .touchUpInside)
+        bottomStackView.addArrangedSubview(buttonAddNewNote)
+        
+        buttonDeleteNote = buttonsStyle(image: "trash")
+        buttonDeleteNote.addTarget(self, action: #selector(deleteNoteButtonTapped(_:)), for: .touchUpInside)
+        bottomStackView.addArrangedSubview(buttonDeleteNote)
+    }
+    
+    private func setupButtonCloseBottomStyleView() {
+        buttonClosebottomStyleView = buttonsStyle(image: "xmark.circle")
+        buttonClosebottomStyleView.addTarget(self, action: #selector(closeButtonTapped(_:)), for: .touchUpInside)
+        bottomStyleView.addSubview(buttonClosebottomStyleView)
+    }
+    
+    private func setupButtonPaintbrush() {
+        buttonPaintbrush = buttonsStyle(image: "paintbrush")
+        buttonPaintbrush.addTarget(self, action: #selector(buttonPaintbrushTapped(_:)), for: .touchUpInside)
+        bottomStyleView.addSubview(buttonPaintbrush)
+    }
+    
+//    MARK: - Layout
     
     private func setupLayout() {
         NSLayoutConstraint.activate([
@@ -178,54 +211,49 @@ class AddNoteViewController: UIViewController {
             bottomStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: Layout.subviewInset),
             bottomStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -Layout.subviewInset),
             bottomStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            bottomStackView.heightAnchor.constraint(equalToConstant: 50),
+            bottomStackView.heightAnchor.constraint(equalToConstant: Layout.BottomStackView.height),
             
             textView.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: Layout.subviewInset),
             textView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: Layout.subviewInset),
             textView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -Layout.subviewInset),
             textView.bottomAnchor.constraint(equalTo: bottomStackView.topAnchor),
             
-            bottomStyleView.heightAnchor.constraint(equalToConstant: 100),
+            bottomStyleView.heightAnchor.constraint(equalToConstant: Layout.BottomStyleView.height),
             bottomStyleView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             bottomStyleView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            bottomStyleView.bottomAnchor.constraint(equalTo: bottomStackView.topAnchor),
+            bottomStyleView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
-            formatLabel.topAnchor.constraint(equalTo: bottomStyleView.topAnchor, constant: Layout.BottomStyleTextView.subviewInset),
-            formatLabel.leadingAnchor.constraint(equalTo: bottomStyleView.leadingAnchor, constant: Layout.BottomStyleTextView.subviewInset),
+            formatLabel.topAnchor.constraint(equalTo: bottomStyleView.topAnchor, constant: Layout.BottomStyleView.subviewInset),
+            formatLabel.leadingAnchor.constraint(equalTo: bottomStyleView.leadingAnchor, constant: Layout.BottomStyleView.subviewInset),
             
-            buttonClosebottomStyleView.trailingAnchor.constraint(equalTo: bottomStyleView.trailingAnchor, constant: -Layout.BottomStyleTextView.subviewInset),
+            buttonClosebottomStyleView.trailingAnchor.constraint(equalTo: bottomStyleView.trailingAnchor, constant: -Layout.BottomStyleView.subviewInset),
             buttonClosebottomStyleView.centerYAnchor.constraint(equalTo: formatLabel.centerYAnchor),
             
-            styleStackView.topAnchor.constraint(equalTo: formatLabel.bottomAnchor, constant: Layout.BottomStyleTextView.subviewInset),
-            styleStackView.leadingAnchor.constraint(equalTo: bottomStyleView.leadingAnchor, constant: Layout.BottomStyleTextView.subviewInset),
-            styleStackView.trailingAnchor.constraint(equalTo: bottomStyleView.trailingAnchor, constant: -Layout.BottomStyleTextView.subviewInset),
+            buttonPaintbrush.trailingAnchor.constraint(equalTo: buttonClosebottomStyleView.leadingAnchor, constant: -Layout.BottomStyleView.subviewInset),
+            buttonPaintbrush.centerYAnchor.constraint(equalTo: formatLabel.centerYAnchor),
+            
+            styleStackView.topAnchor.constraint(equalTo: formatLabel.bottomAnchor, constant: Layout.BottomStyleView.subviewInset),
+            styleStackView.leadingAnchor.constraint(equalTo: bottomStyleView.leadingAnchor, constant: Layout.BottomStyleView.subviewInset),
+            styleStackView.trailingAnchor.constraint(equalTo: bottomStyleView.trailingAnchor, constant: -Layout.BottomStyleView.subviewInset),
             
         ])
     }
     
-    private func setupButtons() {
-        
-        buttonAddPhoto = buttonsStyle(image: "camera")
-        buttonAddPhoto.addTarget(self, action: #selector(addPhotoButtonTapped(_:)), for: .touchUpInside)
-        bottomStackView.addArrangedSubview(buttonAddPhoto)
-    
-        buttonChangeTextStyle = buttonsStyle(image: "square.and.pencil")
-        buttonChangeTextStyle.addTarget(self, action: #selector(changeTextStyleButtonTapped(_:)), for: .touchUpInside)
-        bottomStackView.addArrangedSubview(buttonChangeTextStyle)
-        
-        buttonAddNewNote = buttonsStyle(image: "plus")
-        buttonAddNewNote.addTarget(self, action: #selector(doneButtonTapped(_:)), for: .touchUpInside)
-        bottomStackView.addArrangedSubview(buttonAddNewNote)
-        
-        buttonDeleteNote = buttonsStyle(image: "trash")
-        buttonDeleteNote.addTarget(self, action: #selector(deleteNoteButtonTapped(_:)), for: .touchUpInside)
-        bottomStackView.addArrangedSubview(buttonDeleteNote)
-    }
-    
+//     MARK: - Style methods
     private func styleOfSelectedText(size: CGFloat) {
         let font = UIFont.boldSystemFont(ofSize: size)
+        
+            let attributes = [NSAttributedString.Key.font: font]
+            
+            let attributedString = NSMutableAttributedString(string: textView.text)
+            attributedString.addAttributes(attributes as [NSAttributedString.Key : Any], range: textView.selectedRange)
+            
+            self.textView.attributedText = attributedString
+    }
+    
+    private func colorOfSelectedText() {
         let color = UIColor(named: "Coral")
-            let attributes = [NSAttributedString.Key.font: font, NSAttributedString.Key.backgroundColor: color]
+            let attributes = [NSAttributedString.Key.backgroundColor: color]
             
             let attributedString = NSMutableAttributedString(string: textView.text)
             attributedString.addAttributes(attributes as [NSAttributedString.Key : Any], range: textView.selectedRange)
@@ -260,12 +288,6 @@ class AddNoteViewController: UIViewController {
         stackView.distribution = .fillEqually
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
-    }
-    
-    private func setupButtonCloseBottomStyleView() {
-        buttonClosebottomStyleView = buttonsStyle(image: "xmark.circle")
-        buttonClosebottomStyleView.addTarget(self, action: #selector(closeButtonTapped(_:)), for: .touchUpInside)
-        bottomStyleView.addSubview(buttonClosebottomStyleView)
     }
     
     private func setupformatLabel() {
@@ -304,6 +326,16 @@ class AddNoteViewController: UIViewController {
         styleStackView.addArrangedSubview(buttonMainText)
     }
     
+    private func buttonChangeColor(button: UIButton) {
+        if button.backgroundColor == UIColor.white {
+            button.backgroundColor = UIColor(named: "Coral")
+        } else if button.backgroundColor == UIColor(named: "Coral") {
+            button.backgroundColor = UIColor.white
+        }
+    }
+    
+//    MARK: - Button action
+    
     @objc private func doneButtonTapped(_ sender: UIButton) {
         presenter.buttonDoneTapped()
     }
@@ -321,7 +353,7 @@ class AddNoteViewController: UIViewController {
     }
     
     @objc private func addNewNoteButtonTapped(_ sender: UIButton) {
-        
+        presenter.addNewNoteButtonTapped()
     }
     
     @objc private func deleteNoteButtonTapped(_ sender: UIButton) {
@@ -332,44 +364,52 @@ class AddNoteViewController: UIViewController {
         bottomStyleView.isHidden = true
     }
     
+    @objc private func buttonPaintbrushTapped(_ sender: UIButton) {
+        colorOfSelectedText()
+    }
+    
     @objc private func nameButtonTapped(_ sender: UIButton) {
         let size: CGFloat = 24
         styleOfSelectedText(size: size)
+        buttonChangeColor(button: sender)
     }
     
     @objc private func titleButtonTapped(_ sender: UIButton) {
         let size: CGFloat = 20
         styleOfSelectedText(size: size)
+        buttonChangeColor(button: sender)
     }
     
     @objc private func subTitleButtonTapped(_ sender: UIButton) {
         let size: CGFloat = 18
         styleOfSelectedText(size: size)
+        buttonChangeColor(button: sender)
     }
     
     @objc private func mainTextButtonTapped(_ sender: UIButton) {
         let font = UIFont.systemFont(ofSize: 18)
-        let color = UIColor.red
-            let attributes = [NSAttributedString.Key.font: font, NSAttributedString.Key.backgroundColor: color]
+            let attributes = [NSAttributedString.Key.font: font]
             
             let attributedString = NSMutableAttributedString(string: textView.text)
             attributedString.addAttributes(attributes as [NSAttributedString.Key : Any], range: textView.selectedRange)
             
             self.textView.attributedText = attributedString
+        
+        buttonChangeColor(button: sender)
     }
-    
-    
-    
-    
+
+//  MARK: - Keybord
     @objc func keyboardWillShow(notification: NSNotification) {
         NSLayoutConstraint.activate([
-            bottomStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -300)
+            bottomStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -300),
+            bottomStyleView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -310)
         ])
     }
 
     @objc func keyboardWillHide(notification: NSNotification) {
         NSLayoutConstraint.activate([
-            bottomStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
+            bottomStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0),
+            bottomStyleView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
         ])
     }
 
@@ -425,12 +465,10 @@ extension AddNoteViewController: UITextViewDelegate {
     }
 }
 
-//MARK: - UIScrollView
-extension UIScrollView {
-    func setContentInsetAndScrollIndicatorInsets(_ edgeInsets: UIEdgeInsets) {
-        self.contentInset = edgeInsets
-        self.scrollIndicatorInsets = edgeInsets
+//  MARK: - UIButton
+extension UIButton {
+    func setBackgroundColor(color: UIColor, forState: UIControl.State) {
+        
     }
 }
-
 

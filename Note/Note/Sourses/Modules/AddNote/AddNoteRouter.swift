@@ -33,7 +33,9 @@ class AddNoteRouter {
         view?.present(alert, animated: true, completion: nil)
     }
     
-    func showTextStyleModule() {
-        print("i showed styleTextModule")
+    func showAddNoteModule(note: Note) {
+        let configurator = AddNoteModuleConfigurator(serviceContainer: serviceContainer)
+        let addNoteViewController = configurator.configure(note: note)
+        view?.navigationController?.pushViewController(addNoteViewController, animated: true)
     }
 }

@@ -21,6 +21,14 @@ class NoteListViewController: UIViewController {
     
     private let presenter: NoteListViewOutput
     
+    private var labelNote = UILabel(frame: .zero)
+    private var buttonAdd = UIButton(frame: .zero)
+    private var labelNoWallet = UILabel(frame: .zero)
+    
+    private var noteListCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout.init())
+    private let layout:UICollectionViewFlowLayout = UICollectionViewFlowLayout.init()
+    
+//    MARK: - Init
     init(presenter: NoteListViewOutput) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
@@ -30,13 +38,7 @@ class NoteListViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private var labelNote = UILabel(frame: .zero)
-    private var buttonAdd = UIButton(frame: .zero)
-    private var labelNoWallet = UILabel(frame: .zero)
-    
-    private var noteListCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout.init())
-    private let layout:UICollectionViewFlowLayout = UICollectionViewFlowLayout.init()
-    
+//    MARK: - Life circle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -50,7 +52,8 @@ class NoteListViewController: UIViewController {
             labelNoWallet.isHidden = false
         }
     }
-    
+ 
+//    MARK: Setup UI
     private func setupUI() {
         view.backgroundColor = .white
         navigationController?.navigationBar.isHidden = true
@@ -96,7 +99,8 @@ class NoteListViewController: UIViewController {
         noteListCollectionView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(noteListCollectionView)
     }
-    
+   
+//    MARK: - Layout
     private func setupLayout() {
         NSLayoutConstraint.activate([
             
@@ -116,11 +120,13 @@ class NoteListViewController: UIViewController {
         ])
     }
     
+//    MARK: - Button action
     @objc private func addNoteButtonTapped(_ sender: UIButton) {
         presenter.buttonAddTapped()
     }
 }
 
+//  MARK: - NotiLISTInput
 extension NoteListViewController: NoteListViewInput {
     func reloadUI() {
         noteListCollectionView.reloadData()
@@ -132,6 +138,8 @@ extension NoteListViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         presenter.didSelectRowAt(index: indexPath.row)
     }
+    
+    
 }
 
 // MARK: - UICollectionViewDataSource
