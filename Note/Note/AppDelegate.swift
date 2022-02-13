@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  Note
 //
-//  Created by Поздняков Игорь Николаевич on 10.02.2022.
+//  Created by Татьяна Лузанова on 10.02.2022.
 //
 
 import UIKit
