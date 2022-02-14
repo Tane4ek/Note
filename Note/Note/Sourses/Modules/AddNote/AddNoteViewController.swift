@@ -48,11 +48,19 @@ class AddNoteViewController: UIViewController {
     private var buttonClosebottomStyleView = UIButton(frame: .zero)
     private var buttonPaintbrush = UIButton(frame: .zero)
     private var formatLabel = UILabel(frame: .zero)
+    
+    private var styleFontStackView = UIStackView(frame: .zero)
+    private var buttonBoldFont = UIButton(frame: .zero)
+    private var buttonItalicFont = UIButton(frame: .zero)
+    private var buttonUnderlineFont = UIButton(frame: .zero)
+    private var buttonStrikethroughFont = UIButton(frame: .zero)
+    
     private var styleStackView = UIStackView(frame: .zero)
     private var buttonName = UIButton(frame: .zero)
     private var buttonTitle = UIButton(frame: .zero)
     private var buttonSubTitle = UIButton(frame: .zero)
     private var buttonMainText = UIButton(frame: .zero)
+    
     
 //    MARK: - Init
     init(presenter: AddNoteViewOutput) {
@@ -156,6 +164,7 @@ class AddNoteViewController: UIViewController {
         setupButtonPaintbrush()
         setupformatLabel()
         setupStyleStackView()
+        setupStyleFontStackView()
         
     }
     
@@ -235,6 +244,11 @@ class AddNoteViewController: UIViewController {
             styleStackView.topAnchor.constraint(equalTo: formatLabel.bottomAnchor, constant: Layout.BottomStyleView.subviewInset),
             styleStackView.leadingAnchor.constraint(equalTo: bottomStyleView.leadingAnchor, constant: Layout.BottomStyleView.subviewInset),
             styleStackView.trailingAnchor.constraint(equalTo: bottomStyleView.trailingAnchor, constant: -Layout.BottomStyleView.subviewInset),
+            
+            styleFontStackView.centerYAnchor.constraint(equalTo: formatLabel.centerYAnchor),
+            styleFontStackView.leadingAnchor.constraint(equalTo: formatLabel.trailingAnchor, constant: Layout.BottomStyleView.subviewInset),
+            styleFontStackView.trailingAnchor.constraint(equalTo: buttonPaintbrush.leadingAnchor, constant: -Layout.BottomStyleView.subviewInset),
+            
             
         ])
     }
@@ -321,9 +335,43 @@ class AddNoteViewController: UIViewController {
         styleStackView.addArrangedSubview(buttonSubTitle)
         
         buttonMainText = styleButtonsStyle(name: "Main text")
-        buttonMainText.titleLabel?.font = UIFont.systemFont(ofSize: 18)
+        buttonMainText.titleLabel?.font = UIFont.systemFont(ofSize: 20)
         buttonMainText.addTarget(self, action: #selector(mainTextButtonTapped(_:)), for: .touchUpInside)
         styleStackView.addArrangedSubview(buttonMainText)
+    }
+    
+    private func setupStyleFontStackView() {
+        styleFontStackView = stackViewStyle()
+        bottomStyleView.addSubview(styleFontStackView)
+        setupStyleFontButtons()
+    }
+    
+    private func setupStyleFontButtons() {
+        buttonBoldFont = styleButtonsStyle(name: "B")
+        buttonBoldFont.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
+        buttonBoldFont.addTarget(self, action: #selector(boldFontButtonTapped(_:)), for: .touchUpInside)
+        styleFontStackView.addArrangedSubview(buttonBoldFont)
+        
+        buttonItalicFont = styleButtonsStyle(name: "I")
+        buttonItalicFont.titleLabel?.font = UIFont.italicSystemFont(ofSize: 20)
+        buttonItalicFont.addTarget(self, action: #selector(italicFontButtonTapped(_:)), for: .touchUpInside)
+        styleFontStackView.addArrangedSubview(buttonItalicFont)
+        
+        buttonUnderlineFont = styleButtonsStyle(name: "U")
+        buttonUnderlineFont.titleLabel?.font = UIFont.systemFont(ofSize: 20)
+//        var underlineString: NSMutableAttributedString = NSMutableAttributedString(string: (buttonUnderlineFont.titleLabel?.text)!)
+//        underlineString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: NSRange(location: 0, length: titleLabel?.text.count))
+//        buttonUnderlineFont.setAttributedTitle(underlineString, for: .normal)
+        buttonUnderlineFont.addTarget(self, action: #selector(underlineFontButtonTapped(_:)), for: .touchUpInside)
+        styleFontStackView.addArrangedSubview(buttonUnderlineFont)
+        
+        buttonStrikethroughFont = styleButtonsStyle(name: "S")
+        buttonStrikethroughFont.titleLabel?.font = UIFont.systemFont(ofSize: 20)
+//        var strikethroughString: NSMutableAttributedString = NSMutableAttributedString(string: (buttonStrikethroughFont.titleLabel?.text)!)
+//        strikethroughString.addAttribute(.strikethroughStyle, value: NSUnderlineStyle.single.rawValue, range: NSRange(location: 0, length: title!.count))
+//        buttonStrikethroughFont.setAttributedTitle(strikethroughString, for: .normal)
+        buttonStrikethroughFont.addTarget(self, action: #selector(strikethroughFontButtonTapped(_:)), for: .touchUpInside)
+        styleFontStackView.addArrangedSubview(buttonStrikethroughFont)
     }
     
     private func buttonChangeColor(button: UIButton) {
@@ -372,18 +420,36 @@ class AddNoteViewController: UIViewController {
         let size: CGFloat = 24
         styleOfSelectedText(size: size)
         buttonChangeColor(button: sender)
+        if buttonName.backgroundColor == UIColor(named: "Coral") {
+            buttonTitle.backgroundColor = UIColor.white
+            buttonSubTitle.backgroundColor = UIColor.white
+            buttonMainText.backgroundColor = UIColor.white
+            buttonBoldFont.backgroundColor = UIColor(named: "Coral")
+        }
     }
     
     @objc private func titleButtonTapped(_ sender: UIButton) {
         let size: CGFloat = 20
         styleOfSelectedText(size: size)
         buttonChangeColor(button: sender)
+        if buttonTitle.backgroundColor == UIColor(named: "Coral") {
+            buttonName.backgroundColor = UIColor.white
+            buttonSubTitle.backgroundColor = UIColor.white
+            buttonMainText.backgroundColor = UIColor.white
+            buttonBoldFont.backgroundColor = UIColor(named: "Coral")
+        }
     }
     
     @objc private func subTitleButtonTapped(_ sender: UIButton) {
         let size: CGFloat = 18
         styleOfSelectedText(size: size)
         buttonChangeColor(button: sender)
+        if buttonSubTitle.backgroundColor == UIColor(named: "Coral") {
+            buttonTitle.backgroundColor = UIColor.white
+            buttonName.backgroundColor = UIColor.white
+            buttonMainText.backgroundColor = UIColor.white
+            buttonBoldFont.backgroundColor = UIColor(named: "Coral")
+        }
     }
     
     @objc private func mainTextButtonTapped(_ sender: UIButton) {
@@ -395,6 +461,39 @@ class AddNoteViewController: UIViewController {
             
             self.textView.attributedText = attributedString
         
+        buttonChangeColor(button: sender)
+        if buttonMainText.backgroundColor == UIColor(named: "Coral") {
+            buttonTitle.backgroundColor = UIColor.white
+            buttonSubTitle.backgroundColor = UIColor.white
+            buttonName.backgroundColor = UIColor.white
+            buttonBoldFont.backgroundColor = UIColor.white
+        }
+    }
+    
+    @objc private func boldFontButtonTapped(_ sender: UIButton) {
+        buttonChangeColor(button: sender)
+//        textView.font = UIFont.boldSystemFont(ofSize: 18)
+        if textView.font != UIFont.boldSystemFont(ofSize: 20) {
+            textView.font = UIFont.boldSystemFont(ofSize: 20)
+        } else if textView.font == UIFont.boldSystemFont(ofSize: 20) {
+            textView.font = UIFont.systemFont(ofSize: 20)
+        }
+    }
+    
+    @objc private func italicFontButtonTapped(_ sender: UIButton) {
+        buttonChangeColor(button: sender)
+        if textView.font != UIFont.italicSystemFont(ofSize: 20) {
+            textView.font = UIFont.italicSystemFont(ofSize: 20)
+        } else if textView.font == UIFont.italicSystemFont(ofSize: 20) {
+            textView.font = UIFont.systemFont(ofSize: 20)
+        }
+    }
+    
+    @objc private func underlineFontButtonTapped(_ sender: UIButton) {
+        buttonChangeColor(button: sender)
+    }
+    
+    @objc private func strikethroughFontButtonTapped(_ sender: UIButton) {
         buttonChangeColor(button: sender)
     }
 
