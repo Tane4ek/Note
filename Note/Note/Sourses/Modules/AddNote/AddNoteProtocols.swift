@@ -7,11 +7,38 @@
 
 import Foundation
 
-protocol TextInputCollectionViewCellDelegate {
+protocol BottomStackViewDelegate {
     
-    func getData (data: String, index: Int)
+    func addPhotoButtonTapped()
     
-    func dataTransfer(index: Int)
+    func changeTextStyleButtonTapped()
+    
+    func addNewNoteButtonTapped()
+    
+    func deleteNoteButtonTapped() 
+}
+
+protocol BottomStyleViewDelegate {
+    
+    func closeButtonTapped()
+    
+    func buttonPaintbrushTapped()
+    
+    func nameButtonTapped()
+    
+    func titleButtonTapped()
+    
+    func subTitleButtonTapped()
+    
+    func mainTextButtonTapped()
+    
+    func boldFontButtonTapped()
+    
+    func italicFontButtonTapped()
+    
+    func underlineFontButtonTapped()
+    
+    func strikethroughFontButtonTapped() 
 }
 
 protocol AddNoteViewInput: AnyObject {

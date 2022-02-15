@@ -14,20 +14,12 @@ class AddNoteViewController: UIViewController {
         
         enum BottomStackView {
             static let height: CGFloat = 50
-            static let bottomInset: CGFloat = 300
         }
         
         enum BottomStyleView {
-            static let height: CGFloat = 120
+            static let height: CGFloat = 100
             static let subviewInset: CGFloat = 10
         }
-    }
-    
-    private enum fontStyle {
-        static let name = UIFont.boldSystemFont(ofSize: 24)
-        static let title = UIFont.boldSystemFont(ofSize: 22)
-        static let subtitel = UIFont.boldSystemFont(ofSize: 20)
-        static let mainText = UIFont.systemFont(ofSize: 18)
     }
     
     private let presenter: AddNoteViewOutput
@@ -38,31 +30,13 @@ class AddNoteViewController: UIViewController {
     private var dateLabel = UILabel(frame: .zero)
     private var textField = UITextField()
     private var textView = UITextView(frame: .zero)
-    private var bottomStackView = UIStackView()
-    private var buttonChangeTextStyle = UIButton(frame: .zero)
-    private var buttonAddPhoto = UIButton(frame: .zero)
-    private var buttonAddNewNote = UIButton(frame: .zero)
-    private var buttonDeleteNote = UIButton(frame: .zero)
+    private var bottomStackView = BottomStackView()
+    private var bottomStyleView = BottomStyleView()
     
-    private var bottomStyleView = UIView(frame: .zero)
-    private var buttonClosebottomStyleView = UIButton(frame: .zero)
-    private var buttonPaintbrush = UIButton(frame: .zero)
-    private var formatLabel = UILabel(frame: .zero)
-    
-    private var styleFontStackView = UIStackView(frame: .zero)
-    private var buttonBoldFont = UIButton(frame: .zero)
-    private var buttonItalicFont = UIButton(frame: .zero)
-    private var buttonUnderlineFont = UIButton(frame: .zero)
-    private var buttonStrikethroughFont = UIButton(frame: .zero)
-    
-    private var styleStackView = UIStackView(frame: .zero)
-    private var buttonName = UIButton(frame: .zero)
-    private var buttonTitle = UIButton(frame: .zero)
-    private var buttonSubTitle = UIButton(frame: .zero)
-    private var buttonMainText = UIButton(frame: .zero)
-    
-    
-//    MARK: - Init
+    private var bottomAnchorbottomStyleView: NSLayoutConstraint?
+    private var bottomAnchorbottomStackView: NSLayoutConstraint?
+   
+    //    MARK: - Init
     init(presenter: AddNoteViewOutput) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
@@ -72,10 +46,14 @@ class AddNoteViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-// MARK: - Life circle
+    // MARK: - Life circle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        presenter.viewWillAppear()
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
@@ -84,11 +62,7 @@ class AddNoteViewController: UIViewController {
         NotificationCenter.default.removeObserver(self)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        presenter.viewWillAppear()
-    }
-
-//    MARK: Setup UI
+    //    MARK: Setup UI
     private func setupUI() {
         view.backgroundColor = .white
         setupBackButton()
@@ -96,7 +70,7 @@ class AddNoteViewController: UIViewController {
         setupDateLabel()
         setupTextField()
         setupTextView()
-        setupStackView()
+        setupBottomStackView()
         setupBottomStyleView()
         setupLayout()
     }
@@ -145,63 +119,26 @@ class AddNoteViewController: UIViewController {
         view.addSubview(textView)
     }
     
-    private func setupStackView() {
-        bottomStackView = stackViewStyle()
+    private func setupBottomStackView() {
+        bottomStackView.delegate = self
+        bottomStackView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(bottomStackView)
-        setupButtons()
     }
     
     private func setupBottomStyleView() {
-        bottomStyleView.backgroundColor = UIColor.white
         bottomStyleView.isHidden = true
-        bottomStyleView.layer.shadowColor = UIColor.lightGray.cgColor
-        bottomStyleView.layer.shadowRadius = 5
-        bottomStyleView.layer.shadowOpacity = 0.5
-        bottomStyleView.layer.shadowOffset = CGSize.zero
+        bottomStyleView.delegate = self
         bottomStyleView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(bottomStyleView)
-        setupButtonCloseBottomStyleView()
-        setupButtonPaintbrush()
-        setupformatLabel()
-        setupStyleStackView()
-        setupStyleFontStackView()
-        
     }
-    
-    private func setupButtons() {
-        
-        buttonAddPhoto = buttonsStyle(image: "camera")
-        buttonAddPhoto.addTarget(self, action: #selector(addPhotoButtonTapped(_:)), for: .touchUpInside)
-        bottomStackView.addArrangedSubview(buttonAddPhoto)
-    
-        buttonChangeTextStyle = buttonsStyle(image: "square.and.pencil")
-        buttonChangeTextStyle.addTarget(self, action: #selector(changeTextStyleButtonTapped(_:)), for: .touchUpInside)
-        bottomStackView.addArrangedSubview(buttonChangeTextStyle)
-        
-        buttonAddNewNote = buttonsStyle(image: "plus")
-        buttonAddNewNote.addTarget(self, action: #selector(addNewNoteButtonTapped(_:)), for: .touchUpInside)
-        bottomStackView.addArrangedSubview(buttonAddNewNote)
-        
-        buttonDeleteNote = buttonsStyle(image: "trash")
-        buttonDeleteNote.addTarget(self, action: #selector(deleteNoteButtonTapped(_:)), for: .touchUpInside)
-        bottomStackView.addArrangedSubview(buttonDeleteNote)
-    }
-    
-    private func setupButtonCloseBottomStyleView() {
-        buttonClosebottomStyleView = buttonsStyle(image: "xmark.circle")
-        buttonClosebottomStyleView.addTarget(self, action: #selector(closeButtonTapped(_:)), for: .touchUpInside)
-        bottomStyleView.addSubview(buttonClosebottomStyleView)
-    }
-    
-    private func setupButtonPaintbrush() {
-        buttonPaintbrush = buttonsStyle(image: "paintbrush")
-        buttonPaintbrush.addTarget(self, action: #selector(buttonPaintbrushTapped(_:)), for: .touchUpInside)
-        bottomStyleView.addSubview(buttonPaintbrush)
-    }
-    
-//    MARK: - Layout
-    
+ 
+    //    MARK: - Layout
     private func setupLayout() {
+        let bottomAnchorbottomStyleView = bottomStyleView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        let bottomAnchorbottomStackView = bottomStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        self.bottomAnchorbottomStyleView = bottomAnchorbottomStyleView
+        self.bottomAnchorbottomStackView = bottomAnchorbottomStackView
+        
         NSLayoutConstraint.activate([
             
             buttonBack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Layout.subviewInset),
@@ -219,8 +156,8 @@ class AddNoteViewController: UIViewController {
             
             bottomStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: Layout.subviewInset),
             bottomStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -Layout.subviewInset),
-            bottomStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             bottomStackView.heightAnchor.constraint(equalToConstant: Layout.BottomStackView.height),
+            bottomAnchorbottomStackView,
             
             textView.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: Layout.subviewInset),
             textView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: Layout.subviewInset),
@@ -230,26 +167,7 @@ class AddNoteViewController: UIViewController {
             bottomStyleView.heightAnchor.constraint(equalToConstant: Layout.BottomStyleView.height),
             bottomStyleView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             bottomStyleView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            bottomStyleView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
-            formatLabel.topAnchor.constraint(equalTo: bottomStyleView.topAnchor, constant: Layout.BottomStyleView.subviewInset),
-            formatLabel.leadingAnchor.constraint(equalTo: bottomStyleView.leadingAnchor, constant: Layout.BottomStyleView.subviewInset),
-            
-            buttonClosebottomStyleView.trailingAnchor.constraint(equalTo: bottomStyleView.trailingAnchor, constant: -Layout.BottomStyleView.subviewInset),
-            buttonClosebottomStyleView.centerYAnchor.constraint(equalTo: formatLabel.centerYAnchor),
-            
-            buttonPaintbrush.trailingAnchor.constraint(equalTo: buttonClosebottomStyleView.leadingAnchor, constant: -Layout.BottomStyleView.subviewInset),
-            buttonPaintbrush.centerYAnchor.constraint(equalTo: formatLabel.centerYAnchor),
-            
-            styleStackView.topAnchor.constraint(equalTo: formatLabel.bottomAnchor, constant: Layout.BottomStyleView.subviewInset),
-            styleStackView.leadingAnchor.constraint(equalTo: bottomStyleView.leadingAnchor, constant: Layout.BottomStyleView.subviewInset),
-            styleStackView.trailingAnchor.constraint(equalTo: bottomStyleView.trailingAnchor, constant: -Layout.BottomStyleView.subviewInset),
-            
-            styleFontStackView.centerYAnchor.constraint(equalTo: formatLabel.centerYAnchor),
-            styleFontStackView.leadingAnchor.constraint(equalTo: formatLabel.trailingAnchor, constant: Layout.BottomStyleView.subviewInset),
-            styleFontStackView.trailingAnchor.constraint(equalTo: buttonPaintbrush.leadingAnchor, constant: -Layout.BottomStyleView.subviewInset),
-            
-            
+            bottomAnchorbottomStyleView,
         ])
     }
     
@@ -257,22 +175,22 @@ class AddNoteViewController: UIViewController {
     private func styleOfSelectedText(size: CGFloat) {
         let font = UIFont.boldSystemFont(ofSize: size)
         
-            let attributes = [NSAttributedString.Key.font: font]
-            
-            let attributedString = NSMutableAttributedString(string: textView.text)
-            attributedString.addAttributes(attributes as [NSAttributedString.Key : Any], range: textView.selectedRange)
-            
-            self.textView.attributedText = attributedString
+        let attributes = [NSAttributedString.Key.font: font]
+        
+        let attributedString = NSMutableAttributedString(string: textView.text)
+        attributedString.addAttributes(attributes as [NSAttributedString.Key : Any], range: textView.selectedRange)
+        
+        self.textView.attributedText = attributedString
     }
     
     private func colorOfSelectedText() {
         let color = UIColor(named: "Coral")
-            let attributes = [NSAttributedString.Key.backgroundColor: color]
-            
-            let attributedString = NSMutableAttributedString(string: textView.text)
-            attributedString.addAttributes(attributes as [NSAttributedString.Key : Any], range: textView.selectedRange)
-            
-            self.textView.attributedText = attributedString
+        let attributes = [NSAttributedString.Key.backgroundColor: color]
+        
+        let attributedString = NSMutableAttributedString(string: textView.text)
+        attributedString.addAttributes(attributes as [NSAttributedString.Key : Any], range: textView.selectedRange)
+        
+        self.textView.attributedText = attributedString
     }
     
     private func buttonsStyle(image: String) -> UIButton {
@@ -282,107 +200,8 @@ class AddNoteViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }
-    
-    private func styleButtonsStyle(name: String) -> UIButton {
-        let button = UIButton()
-        button.setTitle(name, for: .normal)
-        button.layer.cornerRadius = 5
-        button.layer.borderColor = UIColor(named: "Coral")?.cgColor
-        button.layer.borderWidth = 1
-        button.setTitleColor(UIColor.black, for: .normal)
-        button.backgroundColor = UIColor.white
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }
-    
-    private func stackViewStyle() -> UIStackView {
-        let stackView = UIStackView()
-        stackView.axis = .horizontal
-        stackView.spacing = 5
-        stackView.distribution = .fillEqually
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        return stackView
-    }
-    
-    private func setupformatLabel() {
-        formatLabel.text = "Format"
-        formatLabel.font = UIFont.boldSystemFont(ofSize: 24)
-        formatLabel.translatesAutoresizingMaskIntoConstraints = false
-        bottomStyleView.addSubview(formatLabel)
-    }
-    
-    private func setupStyleStackView() {
-        styleStackView = stackViewStyle()
-        bottomStyleView.addSubview(styleStackView)
-        setupStyleButtons()
-    }
-    
-    private func setupStyleButtons() {
-        
-        buttonName = styleButtonsStyle(name: "Name")
-        buttonName.titleLabel?.font = UIFont.boldSystemFont(ofSize: 24)
-        buttonName.addTarget(self, action: #selector(nameButtonTapped(_:)), for: .touchUpInside)
-        styleStackView.addArrangedSubview(buttonName)
-    
-        buttonTitle = styleButtonsStyle(name: "Title")
-        buttonTitle.titleLabel?.font = UIFont.boldSystemFont(ofSize: 22)
-        buttonTitle.addTarget(self, action: #selector(titleButtonTapped(_:)), for: .touchUpInside)
-        styleStackView.addArrangedSubview(buttonTitle)
-        
-        buttonSubTitle = styleButtonsStyle(name: "SubTitle")
-        buttonSubTitle.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
-        buttonSubTitle.addTarget(self, action: #selector(subTitleButtonTapped(_:)), for: .touchUpInside)
-        styleStackView.addArrangedSubview(buttonSubTitle)
-        
-        buttonMainText = styleButtonsStyle(name: "Main text")
-        buttonMainText.titleLabel?.font = UIFont.systemFont(ofSize: 20)
-        buttonMainText.addTarget(self, action: #selector(mainTextButtonTapped(_:)), for: .touchUpInside)
-        styleStackView.addArrangedSubview(buttonMainText)
-    }
-    
-    private func setupStyleFontStackView() {
-        styleFontStackView = stackViewStyle()
-        bottomStyleView.addSubview(styleFontStackView)
-        setupStyleFontButtons()
-    }
-    
-    private func setupStyleFontButtons() {
-        buttonBoldFont = styleButtonsStyle(name: "B")
-        buttonBoldFont.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
-        buttonBoldFont.addTarget(self, action: #selector(boldFontButtonTapped(_:)), for: .touchUpInside)
-        styleFontStackView.addArrangedSubview(buttonBoldFont)
-        
-        buttonItalicFont = styleButtonsStyle(name: "I")
-        buttonItalicFont.titleLabel?.font = UIFont.italicSystemFont(ofSize: 20)
-        buttonItalicFont.addTarget(self, action: #selector(italicFontButtonTapped(_:)), for: .touchUpInside)
-        styleFontStackView.addArrangedSubview(buttonItalicFont)
-        
-        buttonUnderlineFont = styleButtonsStyle(name: "U")
-        buttonUnderlineFont.titleLabel?.font = UIFont.systemFont(ofSize: 20)
-//        var underlineString: NSMutableAttributedString = NSMutableAttributedString(string: (buttonUnderlineFont.titleLabel?.text)!)
-//        underlineString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: NSRange(location: 0, length: titleLabel?.text.count))
-//        buttonUnderlineFont.setAttributedTitle(underlineString, for: .normal)
-        buttonUnderlineFont.addTarget(self, action: #selector(underlineFontButtonTapped(_:)), for: .touchUpInside)
-        styleFontStackView.addArrangedSubview(buttonUnderlineFont)
-        
-        buttonStrikethroughFont = styleButtonsStyle(name: "S")
-        buttonStrikethroughFont.titleLabel?.font = UIFont.systemFont(ofSize: 20)
-//        var strikethroughString: NSMutableAttributedString = NSMutableAttributedString(string: (buttonStrikethroughFont.titleLabel?.text)!)
-//        strikethroughString.addAttribute(.strikethroughStyle, value: NSUnderlineStyle.single.rawValue, range: NSRange(location: 0, length: title!.count))
-//        buttonStrikethroughFont.setAttributedTitle(strikethroughString, for: .normal)
-        buttonStrikethroughFont.addTarget(self, action: #selector(strikethroughFontButtonTapped(_:)), for: .touchUpInside)
-        styleFontStackView.addArrangedSubview(buttonStrikethroughFont)
-    }
-    
-    private func buttonChangeColor(button: UIButton) {
-        if button.backgroundColor == UIColor.white {
-            button.backgroundColor = UIColor(named: "Coral")
-        } else if button.backgroundColor == UIColor(named: "Coral") {
-            button.backgroundColor = UIColor.white
-        }
-    }
-    
-//    MARK: - Button action
+  
+    //    MARK: - Button action
     
     @objc private func doneButtonTapped(_ sender: UIButton) {
         presenter.buttonDoneTapped()
@@ -392,126 +211,21 @@ class AddNoteViewController: UIViewController {
         presenter.buttonBackTapped()
     }
     
-    @objc private func addPhotoButtonTapped(_ sender: UIButton) {
-        presenter.addPhotoButtonTapped()
-    }
-    
-    @objc private func changeTextStyleButtonTapped(_ sender: UIButton) {
-        bottomStyleView.isHidden = false
-    }
-    
-    @objc private func addNewNoteButtonTapped(_ sender: UIButton) {
-        presenter.addNewNoteButtonTapped()
-    }
-    
-    @objc private func deleteNoteButtonTapped(_ sender: UIButton) {
-        presenter.deleteNoteButtonTapped()
-    }
-    
-    @objc private func closeButtonTapped(_ sender: UIButton) {
-        bottomStyleView.isHidden = true
-    }
-    
-    @objc private func buttonPaintbrushTapped(_ sender: UIButton) {
-        colorOfSelectedText()
-    }
-    
-    @objc private func nameButtonTapped(_ sender: UIButton) {
-        let size: CGFloat = 24
-        styleOfSelectedText(size: size)
-        buttonChangeColor(button: sender)
-        if buttonName.backgroundColor == UIColor(named: "Coral") {
-            buttonTitle.backgroundColor = UIColor.white
-            buttonSubTitle.backgroundColor = UIColor.white
-            buttonMainText.backgroundColor = UIColor.white
-            buttonBoldFont.backgroundColor = UIColor(named: "Coral")
-        }
-    }
-    
-    @objc private func titleButtonTapped(_ sender: UIButton) {
-        let size: CGFloat = 20
-        styleOfSelectedText(size: size)
-        buttonChangeColor(button: sender)
-        if buttonTitle.backgroundColor == UIColor(named: "Coral") {
-            buttonName.backgroundColor = UIColor.white
-            buttonSubTitle.backgroundColor = UIColor.white
-            buttonMainText.backgroundColor = UIColor.white
-            buttonBoldFont.backgroundColor = UIColor(named: "Coral")
-        }
-    }
-    
-    @objc private func subTitleButtonTapped(_ sender: UIButton) {
-        let size: CGFloat = 18
-        styleOfSelectedText(size: size)
-        buttonChangeColor(button: sender)
-        if buttonSubTitle.backgroundColor == UIColor(named: "Coral") {
-            buttonTitle.backgroundColor = UIColor.white
-            buttonName.backgroundColor = UIColor.white
-            buttonMainText.backgroundColor = UIColor.white
-            buttonBoldFont.backgroundColor = UIColor(named: "Coral")
-        }
-    }
-    
-    @objc private func mainTextButtonTapped(_ sender: UIButton) {
-        let font = UIFont.systemFont(ofSize: 18)
-            let attributes = [NSAttributedString.Key.font: font]
-            
-            let attributedString = NSMutableAttributedString(string: textView.text)
-            attributedString.addAttributes(attributes as [NSAttributedString.Key : Any], range: textView.selectedRange)
-            
-            self.textView.attributedText = attributedString
-        
-        buttonChangeColor(button: sender)
-        if buttonMainText.backgroundColor == UIColor(named: "Coral") {
-            buttonTitle.backgroundColor = UIColor.white
-            buttonSubTitle.backgroundColor = UIColor.white
-            buttonName.backgroundColor = UIColor.white
-            buttonBoldFont.backgroundColor = UIColor.white
-        }
-    }
-    
-    @objc private func boldFontButtonTapped(_ sender: UIButton) {
-        buttonChangeColor(button: sender)
-//        textView.font = UIFont.boldSystemFont(ofSize: 18)
-        if textView.font != UIFont.boldSystemFont(ofSize: 20) {
-            textView.font = UIFont.boldSystemFont(ofSize: 20)
-        } else if textView.font == UIFont.boldSystemFont(ofSize: 20) {
-            textView.font = UIFont.systemFont(ofSize: 20)
-        }
-    }
-    
-    @objc private func italicFontButtonTapped(_ sender: UIButton) {
-        buttonChangeColor(button: sender)
-        if textView.font != UIFont.italicSystemFont(ofSize: 20) {
-            textView.font = UIFont.italicSystemFont(ofSize: 20)
-        } else if textView.font == UIFont.italicSystemFont(ofSize: 20) {
-            textView.font = UIFont.systemFont(ofSize: 20)
-        }
-    }
-    
-    @objc private func underlineFontButtonTapped(_ sender: UIButton) {
-        buttonChangeColor(button: sender)
-    }
-    
-    @objc private func strikethroughFontButtonTapped(_ sender: UIButton) {
-        buttonChangeColor(button: sender)
-    }
-
-//  MARK: - Keybord
+    //  MARK: - Keybord
     @objc func keyboardWillShow(notification: NSNotification) {
-        NSLayoutConstraint.activate([
-            bottomStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -300),
-            bottomStyleView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -310)
-        ])
+        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardRectangle = keyboardFrame.cgRectValue
+            let keyboardHeight = keyboardRectangle.height
+            bottomAnchorbottomStackView?.constant = -keyboardHeight
+            bottomAnchorbottomStyleView?.constant = -keyboardHeight
+        }
     }
-
+    
     @objc func keyboardWillHide(notification: NSNotification) {
-        NSLayoutConstraint.activate([
-            bottomStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0),
-            bottomStyleView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
-        ])
+        bottomAnchorbottomStackView?.constant = 0
+        bottomAnchorbottomStyleView?.constant = 0
     }
-
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if touches.first != nil {
             view.endEditing(true)
@@ -524,7 +238,7 @@ class AddNoteViewController: UIViewController {
 //  MARK: - AddNoteViewInput
 extension AddNoteViewController: AddNoteViewInput {
     func reloadUI() {
-
+        
     }
 }
 
@@ -559,14 +273,86 @@ extension AddNoteViewController: UITextViewDelegate {
         guard let stringRange = Range(range, in: currentText) else { return false }
         let updatedText = currentText.replacingCharacters(in: stringRange, with: text)
         presenter.addNote(note: updatedText)
-    
+        
         return updatedText.count <= 500
     }
 }
 
-//  MARK: - UIButton
-extension UIButton {
-    func setBackgroundColor(color: UIColor, forState: UIControl.State) {
+//  MARK: - BottomStackViewDelegate
+extension AddNoteViewController: BottomStackViewDelegate {
+    func addPhotoButtonTapped() {
+        presenter.addPhotoButtonTapped()
+    }
+    
+    func changeTextStyleButtonTapped() {
+        bottomStyleView.isHidden = false
+    }
+    
+    func addNewNoteButtonTapped() {
+        presenter.addNewNoteButtonTapped()
+    }
+    
+    func deleteNoteButtonTapped() {
+        presenter.deleteNoteButtonTapped()
+    }
+}
+
+//  MARK: - BottomStyleViewDelegate
+extension AddNoteViewController: BottomStyleViewDelegate {
+    func closeButtonTapped() {
+        bottomStyleView.isHidden = true
+    }
+    
+    func buttonPaintbrushTapped() {
+        colorOfSelectedText()
+    }
+    
+    func nameButtonTapped() {
+        let size: CGFloat = 24
+        styleOfSelectedText(size: size)
+    }
+    
+    func titleButtonTapped() {
+        let size: CGFloat = 20
+        styleOfSelectedText(size: size)
+    }
+    
+    func subTitleButtonTapped() {
+        let size: CGFloat = 18
+        styleOfSelectedText(size: size)
+    }
+    
+    func mainTextButtonTapped() {
+        let font = UIFont.systemFont(ofSize: 18)
+        let attributes = [NSAttributedString.Key.font: font]
+        
+        let attributedString = NSMutableAttributedString(string: textView.text)
+        attributedString.addAttributes(attributes as [NSAttributedString.Key : Any], range: textView.selectedRange)
+        
+        self.textView.attributedText = attributedString
+    }
+    
+    func boldFontButtonTapped() {
+        if textView.font != UIFont.boldSystemFont(ofSize: 20) {
+            textView.font = UIFont.boldSystemFont(ofSize: 20)
+        } else if textView.font == UIFont.boldSystemFont(ofSize: 20) {
+            textView.font = UIFont.systemFont(ofSize: 20)
+        }
+    }
+    
+    func italicFontButtonTapped() {
+        if textView.font != UIFont.italicSystemFont(ofSize: 20) {
+            textView.font = UIFont.italicSystemFont(ofSize: 20)
+        } else if textView.font == UIFont.italicSystemFont(ofSize: 20) {
+            textView.font = UIFont.systemFont(ofSize: 20)
+        }
+    }
+    
+    func underlineFontButtonTapped() {
+        
+    }
+    
+    func strikethroughFontButtonTapped() {
         
     }
 }

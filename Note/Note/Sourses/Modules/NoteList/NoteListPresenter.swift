@@ -12,14 +12,14 @@ class NoteListPresenter {
     weak var view: NoteListViewInput?
     var models: [Note] = []
     var router: NoteListRouter?
-    var noteServise: NoteService?
+    var noteServiсe: NoteService?
     
 }
 
 extension NoteListPresenter: NoteListViewOutput {
     
     func viewWillAppear() {
-        models = noteServise?.notes() ?? []
+        models = noteServiсe?.notes() ?? []
         view?.reloadUI()
     }
     

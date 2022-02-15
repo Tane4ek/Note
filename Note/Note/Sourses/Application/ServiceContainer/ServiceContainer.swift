@@ -10,5 +10,4 @@ import Foundation
 struct ServiceContainer {
     
     let noteService: NoteService
-//    let colorService: ColorService
 }

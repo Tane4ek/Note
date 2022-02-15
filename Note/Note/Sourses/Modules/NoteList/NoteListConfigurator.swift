@@ -23,7 +23,7 @@ final class NoteListModuleConfigurator {
         
         presenter.view = view
         presenter.router = router
-        presenter.noteServise = serviceContainer.noteService
+        presenter.noteServiсe = serviceContainer.noteService
         router.serviceContainer = serviceContainer
         router.view = view
         
