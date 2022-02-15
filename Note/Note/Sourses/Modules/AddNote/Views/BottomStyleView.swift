@@ -10,7 +10,7 @@ import UIKit
 class BottomStyleView: UIView {
 
     private enum Layout {
-        static let subviewInset: CGFloat = 50
+        static let subviewInset: CGFloat = 10
     }
     
     private enum fontStyle {
@@ -58,6 +58,7 @@ class BottomStyleView: UIView {
         setupButtonPaintbrush()
         setupStyleStackView()
         setupStyleFontStackView()
+        setupLayout()
     }
     
     private func setupButtonCloseBottomStyleView() {

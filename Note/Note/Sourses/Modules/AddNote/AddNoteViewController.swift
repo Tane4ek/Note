@@ -17,7 +17,7 @@ class AddNoteViewController: UIViewController {
         }
         
         enum BottomStyleView {
-            static let height: CGFloat = 100
+            static let height: CGFloat = 110
             static let subviewInset: CGFloat = 10
         }
     }
