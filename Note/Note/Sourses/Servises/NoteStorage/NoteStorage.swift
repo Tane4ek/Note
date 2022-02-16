@@ -56,6 +56,7 @@ extension NoteStorageImpl: NoteStorage {
         userNote.id = note.id
         userNote.text = note.text
         userNote.date = note.dateOfLastChange
+        userNote.textStyle = note.styleText
         
         do {
             try managedContext?.save()
@@ -73,7 +74,7 @@ extension NoteStorageImpl: NoteStorage {
         let fetchRequest: NSFetchRequest<Notes> = Notes.fetchRequest()
         do {
             storedUserNotes = try managedContext!.fetch(fetchRequest)
-            storedUserNotes.forEach { let note = Note(id: $0.id ?? UUID(), name: $0.name ?? "", text: $0.text ?? "", dateOfLastChange: $0.date ?? Date.now)
+            storedUserNotes.forEach { let note = Note(id: $0.id ?? UUID(), name: $0.name ?? "", text: $0.text ?? "", dateOfLastChange: $0.date ?? Date.now, styleText: $0.textStyle ?? "mainText")
                 
                 notesFromDB.append(note)
             }
@@ -110,6 +111,7 @@ extension NoteStorageImpl: NoteStorage {
         
         storedUserNotes.first?.name = note.name
         storedUserNotes.first?.text = note.text
+        storedUserNotes.first?.textStyle = note.styleText
         
         do {
             try managedContext!.save()

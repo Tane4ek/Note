@@ -22,6 +22,15 @@ class AddNoteViewController: UIViewController {
         }
     }
     
+    private enum fontStyle {
+        static let name = UIFont.boldSystemFont(ofSize: 24)
+        static let title = UIFont.boldSystemFont(ofSize: 22)
+        static let subtitel = UIFont.boldSystemFont(ofSize: 20)
+        static let mainText = UIFont.systemFont(ofSize: 20)
+        static let boldStyle = UIFont.boldSystemFont(ofSize: 20)
+        static let italicStyle = UIFont.italicSystemFont(ofSize: 20)
+    }
+    
     private let presenter: AddNoteViewOutput
     
     private var buttonBack = UIButton(frame: .zero)
@@ -35,7 +44,7 @@ class AddNoteViewController: UIViewController {
     
     private var bottomAnchorbottomStyleView: NSLayoutConstraint?
     private var bottomAnchorbottomStackView: NSLayoutConstraint?
-   
+    
     //    MARK: - Init
     init(presenter: AddNoteViewOutput) {
         self.presenter = presenter
@@ -51,7 +60,7 @@ class AddNoteViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         presenter.viewWillAppear()
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -112,7 +121,7 @@ class AddNoteViewController: UIViewController {
         textView.text = presenter.currentModel().text
         textView.textColor = UIColor.black
         textView.textAlignment = .left
-        textView.font = UIFont.systemFont(ofSize: 20)
+        textView.font = presenter.currentFont()
         textView.delegate = self
         textView.tag = 2
         textView.translatesAutoresizingMaskIntoConstraints = false
@@ -131,7 +140,7 @@ class AddNoteViewController: UIViewController {
         bottomStyleView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(bottomStyleView)
     }
- 
+    
     //    MARK: - Layout
     private func setupLayout() {
         let bottomAnchorbottomStyleView = bottomStyleView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
@@ -172,27 +181,6 @@ class AddNoteViewController: UIViewController {
     }
     
 //     MARK: - Style methods
-    private func styleOfSelectedText(size: CGFloat) {
-        let font = UIFont.boldSystemFont(ofSize: size)
-        
-        let attributes = [NSAttributedString.Key.font: font]
-        
-        let attributedString = NSMutableAttributedString(string: textView.text)
-        attributedString.addAttributes(attributes as [NSAttributedString.Key : Any], range: textView.selectedRange)
-        
-        self.textView.attributedText = attributedString
-    }
-    
-    private func colorOfSelectedText() {
-        let color = UIColor(named: "Coral")
-        let attributes = [NSAttributedString.Key.backgroundColor: color]
-        
-        let attributedString = NSMutableAttributedString(string: textView.text)
-        attributedString.addAttributes(attributes as [NSAttributedString.Key : Any], range: textView.selectedRange)
-        
-        self.textView.attributedText = attributedString
-    }
-    
     private func buttonsStyle(image: String) -> UIButton {
         let button = UIButton()
         button.setImage(UIImage(systemName: image), for: .normal)
@@ -200,9 +188,8 @@ class AddNoteViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }
-  
-    //    MARK: - Button action
     
+//    MARK: - Button action
     @objc private func doneButtonTapped(_ sender: UIButton) {
         presenter.buttonDoneTapped()
     }
@@ -211,7 +198,7 @@ class AddNoteViewController: UIViewController {
         presenter.buttonBackTapped()
     }
     
-    //  MARK: - Keybord
+//  MARK: - Keybord
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
             let keyboardRectangle = keyboardFrame.cgRectValue
@@ -304,56 +291,47 @@ extension AddNoteViewController: BottomStyleViewDelegate {
     }
     
     func buttonPaintbrushTapped() {
-        colorOfSelectedText()
+       
     }
     
     func nameButtonTapped() {
-        let size: CGFloat = 24
-        styleOfSelectedText(size: size)
+        presenter.fontForNameStyle(font: presenter.currentFont())
+        textView.font = presenter.currentFont()
     }
     
     func titleButtonTapped() {
-        let size: CGFloat = 20
-        styleOfSelectedText(size: size)
+        presenter.fontForTitleStyle(font: presenter.currentFont())
+        textView.font = presenter.currentFont()
     }
     
     func subTitleButtonTapped() {
-        let size: CGFloat = 18
-        styleOfSelectedText(size: size)
+        presenter.fontForSubTitleStyle(font: presenter.currentFont())
+        textView.font = presenter.currentFont()
     }
     
     func mainTextButtonTapped() {
-        let font = UIFont.systemFont(ofSize: 18)
-        let attributes = [NSAttributedString.Key.font: font]
-        
-        let attributedString = NSMutableAttributedString(string: textView.text)
-        attributedString.addAttributes(attributes as [NSAttributedString.Key : Any], range: textView.selectedRange)
-        
-        self.textView.attributedText = attributedString
+        presenter.fontForMainTextStyle(font: presenter.currentFont())
+        textView.font = presenter.currentFont()
     }
     
     func boldFontButtonTapped() {
-        if textView.font != UIFont.boldSystemFont(ofSize: 20) {
-            textView.font = UIFont.boldSystemFont(ofSize: 20)
-        } else if textView.font == UIFont.boldSystemFont(ofSize: 20) {
-            textView.font = UIFont.systemFont(ofSize: 20)
-        }
+        presenter.fontForBoldStyle(font: presenter.currentFont())
+        textView.font = presenter.currentFont()
     }
     
     func italicFontButtonTapped() {
-        if textView.font != UIFont.italicSystemFont(ofSize: 20) {
-            textView.font = UIFont.italicSystemFont(ofSize: 20)
-        } else if textView.font == UIFont.italicSystemFont(ofSize: 20) {
-            textView.font = UIFont.systemFont(ofSize: 20)
-        }
+        presenter.fontForItalicStyle(font: presenter.currentFont())
+        textView.font = presenter.currentFont()
     }
     
     func underlineFontButtonTapped() {
-        
+        presenter.fontForUnderlineStyle()
+        textView.font = presenter.currentFont()
     }
     
     func strikethroughFontButtonTapped() {
-        
+        presenter.fontForStrikethroughStyle()
+        textView.font = presenter.currentFont()
     }
 }
 

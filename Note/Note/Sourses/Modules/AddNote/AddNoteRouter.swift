@@ -12,6 +12,7 @@ class AddNoteRouter {
     weak var view: UIViewController?
     var serviceContainer: ServiceContainer
     weak var alert: UIAlertController?
+    let bottomStyleView = BottomStyleView()
     
     init(serviceContainer: ServiceContainer) {
         self.serviceContainer = serviceContainer
@@ -21,21 +22,15 @@ class AddNoteRouter {
         view?.navigationController?.popViewController(animated: true)
     }
     
-    func showAlert() {
-        let alert = UIAlertController(title: "Attention", message: "Note can't be empty", preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-        view?.present(alert, animated: true, completion: nil)
-    }
-    
-    func showPhotoAlert() {
-        let alert = UIAlertController(title: "Add Photo", message: "Will be available soon", preferredStyle: UIAlertController.Style.alert)
+    func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
         view?.present(alert, animated: true, completion: nil)
     }
     
     func showAddNoteModule(note: Note) {
         let configurator = AddNoteModuleConfigurator(serviceContainer: serviceContainer)
-        let addNoteViewController = configurator.configure(note: note)
+        let addNoteViewController = configurator.configure(note: note, fontStyle: FontStyle.normal.font)
         view?.navigationController?.pushViewController(addNoteViewController, animated: true)
     }
 }

@@ -6,10 +6,12 @@
 //
 
 import Foundation
+import UIKit
 
 struct Note {
     let id: UUID
     var name: String
     var text: String
     let dateOfLastChange: Date
+    var styleText: String
 }

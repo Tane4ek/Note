@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 final class AddNoteModuleConfigurator {
     
@@ -15,8 +16,8 @@ final class AddNoteModuleConfigurator {
         self.serviceContainer = serviceContainer
     }
     
-    func configure(note: Note?) -> AddNoteViewController {
-        let presenter = AddNotePresenter(note: note)
+    func configure(note: Note?, fontStyle: UIFont) -> AddNoteViewController {
+        let presenter = AddNotePresenter(note: note, fontStyle: fontStyle)
         let view = AddNoteViewController(presenter: presenter)
         let router = AddNoteRouter(serviceContainer: serviceContainer)
 

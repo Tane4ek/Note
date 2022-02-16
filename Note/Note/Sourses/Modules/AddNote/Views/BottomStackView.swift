@@ -2,7 +2,7 @@
 //  BottomStackView.swift
 //  Note
 //
-//  Created by Поздняков Игорь Николаевич on 15.02.2022.
+//  Created by Татьяна Лузанова on 15.02.2022.
 //
 
 import UIKit
@@ -15,6 +15,8 @@ class BottomStackView: UIStackView {
     private var buttonDeleteNote = UIButton(frame: .zero)
     var delegate: BottomStackViewDelegate?
     
+    
+//  MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -24,6 +26,7 @@ class BottomStackView: UIStackView {
         fatalError("init(coder:) has not been implemented")
     }
     
+//  MARK: - SetupUI
     func setupUI() {
         axis = .horizontal
         spacing = 5
@@ -66,6 +69,7 @@ class BottomStackView: UIStackView {
         return button
     }
     
+//    MARK: - Button action
     @objc private func addPhotoButtonTapped(_ sender: UIButton) {
         if let delegate = delegate {
             delegate.addPhotoButtonTapped()

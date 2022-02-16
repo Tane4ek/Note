@@ -2,7 +2,7 @@
 //  BottomStyleView.swift
 //  Note
 //
-//  Created by Поздняков Игорь Николаевич on 15.02.2022.
+//  Created by Татьяна Лузанова on 15.02.2022.
 //
 
 import UIKit
@@ -13,11 +13,14 @@ class BottomStyleView: UIView {
         static let subviewInset: CGFloat = 10
     }
     
-    private enum fontStyle {
+    private enum FontStyle {
         static let name = UIFont.boldSystemFont(ofSize: 24)
         static let title = UIFont.boldSystemFont(ofSize: 22)
         static let subtitel = UIFont.boldSystemFont(ofSize: 20)
-        static let mainText = UIFont.systemFont(ofSize: 18)
+        static let mainText = UIFont.systemFont(ofSize: 20)
+        
+        static let boldStyle = UIFont.boldSystemFont(ofSize: 20)
+        static let italicStyle = UIFont.italicSystemFont(ofSize: 20)
     }
     
     private var buttonClosebottomStyleView = UIButton(frame: .zero)
@@ -38,6 +41,7 @@ class BottomStyleView: UIView {
     
     var delegate: BottomStyleViewDelegate?
     
+//    MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -46,7 +50,8 @@ class BottomStyleView: UIView {
     required init(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+  
+//    MARK: - Setup UI
     private func setupUI() {
         backgroundColor = UIColor.white
         layer.shadowColor = UIColor.lightGray.cgColor
@@ -75,7 +80,7 @@ class BottomStyleView: UIView {
     
     private func setupformatLabel() {
         formatLabel.text = "Format"
-        formatLabel.font = UIFont.boldSystemFont(ofSize: 24)
+        formatLabel.font = FontStyle.title
         formatLabel.translatesAutoresizingMaskIntoConstraints = false
         addSubview(formatLabel)
     }
@@ -91,7 +96,8 @@ class BottomStyleView: UIView {
         addSubview(styleFontStackView)
         setupStyleFontButtons()
     }
-    
+   
+//    MARK: - Layout
     private func setupLayout() {
         NSLayoutConstraint.activate([
             formatLabel.topAnchor.constraint(equalTo: topAnchor, constant: Layout.subviewInset),
@@ -113,6 +119,7 @@ class BottomStyleView: UIView {
         ])
     }
     
+//    MARK: - Style methods
     private func buttonsStyle(image: String) -> UIButton {
         let button = UIButton()
         button.setImage(UIImage(systemName: image), for: .normal)
@@ -136,50 +143,50 @@ class BottomStyleView: UIView {
     private func setupStyleButtons() {
 
         buttonName = styleButtonsStyle(name: "Name")
-        buttonName.titleLabel?.font = UIFont.boldSystemFont(ofSize: 24)
+        buttonName.titleLabel?.font = FontStyle.name
         buttonName.addTarget(self, action: #selector(nameButtonTapped(_:)), for: .touchUpInside)
         styleStackView.addArrangedSubview(buttonName)
 
         buttonTitle = styleButtonsStyle(name: "Title")
-        buttonTitle.titleLabel?.font = UIFont.boldSystemFont(ofSize: 22)
+        buttonTitle.titleLabel?.font = FontStyle.title
         buttonTitle.addTarget(self, action: #selector(titleButtonTapped(_:)), for: .touchUpInside)
         styleStackView.addArrangedSubview(buttonTitle)
 
         buttonSubTitle = styleButtonsStyle(name: "SubTitle")
-        buttonSubTitle.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
+        buttonSubTitle.titleLabel?.font = FontStyle.subtitel
         buttonSubTitle.addTarget(self, action: #selector(subTitleButtonTapped(_:)), for: .touchUpInside)
         styleStackView.addArrangedSubview(buttonSubTitle)
 
         buttonMainText = styleButtonsStyle(name: "Main text")
-        buttonMainText.titleLabel?.font = UIFont.systemFont(ofSize: 20)
+        buttonMainText.titleLabel?.font = FontStyle.mainText
         buttonMainText.addTarget(self, action: #selector(mainTextButtonTapped(_:)), for: .touchUpInside)
         styleStackView.addArrangedSubview(buttonMainText)
     }
 
     private func setupStyleFontButtons() {
         buttonBoldFont = styleButtonsStyle(name: "B")
-        buttonBoldFont.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
+        buttonBoldFont.titleLabel?.font = FontStyle.boldStyle
         buttonBoldFont.addTarget(self, action: #selector(boldFontButtonTapped(_:)), for: .touchUpInside)
         styleFontStackView.addArrangedSubview(buttonBoldFont)
 
         buttonItalicFont = styleButtonsStyle(name: "I")
-        buttonItalicFont.titleLabel?.font = UIFont.italicSystemFont(ofSize: 20)
+        buttonItalicFont.titleLabel?.font = FontStyle.italicStyle
         buttonItalicFont.addTarget(self, action: #selector(italicFontButtonTapped(_:)), for: .touchUpInside)
         styleFontStackView.addArrangedSubview(buttonItalicFont)
 
         buttonUnderlineFont = styleButtonsStyle(name: "U")
-        buttonUnderlineFont.titleLabel?.font = UIFont.systemFont(ofSize: 20)
-        //        var underlineString: NSMutableAttributedString = NSMutableAttributedString(string: (buttonUnderlineFont.titleLabel?.text)!)
-        //        underlineString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: NSRange(location: 0, length: titleLabel?.text.count))
-        //        buttonUnderlineFont.setAttributedTitle(underlineString, for: .normal)
+        buttonUnderlineFont.titleLabel?.font = FontStyle.mainText
+        let attributeUnderlineString: NSMutableAttributedString =  NSMutableAttributedString(string: "U")
+        attributeUnderlineString.addAttribute(NSAttributedString.Key.underlineStyle, value: 2, range: NSMakeRange(0, attributeUnderlineString.length))
+        buttonUnderlineFont.setAttributedTitle(attributeUnderlineString, for: .normal)
         buttonUnderlineFont.addTarget(self, action: #selector(underlineFontButtonTapped(_:)), for: .touchUpInside)
         styleFontStackView.addArrangedSubview(buttonUnderlineFont)
 
         buttonStrikethroughFont = styleButtonsStyle(name: "S")
-        buttonStrikethroughFont.titleLabel?.font = UIFont.systemFont(ofSize: 20)
-        //        var strikethroughString: NSMutableAttributedString = NSMutableAttributedString(string: (buttonStrikethroughFont.titleLabel?.text)!)
-        //        strikethroughString.addAttribute(.strikethroughStyle, value: NSUnderlineStyle.single.rawValue, range: NSRange(location: 0, length: title!.count))
-        //        buttonStrikethroughFont.setAttributedTitle(strikethroughString, for: .normal)
+        buttonStrikethroughFont.titleLabel?.font = FontStyle.mainText
+        let attributeStrikethroughString: NSMutableAttributedString =  NSMutableAttributedString(string: "S")
+        attributeStrikethroughString.addAttribute(NSAttributedString.Key.strikethroughStyle, value: 2, range: NSMakeRange(0, attributeStrikethroughString.length))
+        buttonStrikethroughFont.setAttributedTitle(attributeStrikethroughString, for: .normal)
         buttonStrikethroughFont.addTarget(self, action: #selector(strikethroughFontButtonTapped(_:)), for: .touchUpInside)
         styleFontStackView.addArrangedSubview(buttonStrikethroughFont)
     }
@@ -201,6 +208,7 @@ class BottomStyleView: UIView {
         return stackView
     }
     
+//    MARK: - Button Action
     @objc private func closeButtonTapped(_ sender: UIButton) {
         if let delegate = delegate {
             delegate.closeButtonTapped()
@@ -220,6 +228,7 @@ class BottomStyleView: UIView {
             buttonSubTitle.backgroundColor = UIColor.white
             buttonMainText.backgroundColor = UIColor.white
             buttonBoldFont.backgroundColor = UIColor(named: "Coral")
+            buttonItalicFont.backgroundColor = UIColor.white
         }
         if let delegate = delegate {
             delegate.nameButtonTapped()
@@ -233,6 +242,7 @@ class BottomStyleView: UIView {
             buttonSubTitle.backgroundColor = UIColor.white
             buttonMainText.backgroundColor = UIColor.white
             buttonBoldFont.backgroundColor = UIColor(named: "Coral")
+            buttonItalicFont.backgroundColor = UIColor.white
         }
         
         if let delegate = delegate {
@@ -247,6 +257,7 @@ class BottomStyleView: UIView {
             buttonName.backgroundColor = UIColor.white
             buttonMainText.backgroundColor = UIColor.white
             buttonBoldFont.backgroundColor = UIColor(named: "Coral")
+            buttonItalicFont.backgroundColor = UIColor.white
         }
         
         if let delegate = delegate {
@@ -261,6 +272,7 @@ class BottomStyleView: UIView {
             buttonSubTitle.backgroundColor = UIColor.white
             buttonName.backgroundColor = UIColor.white
             buttonBoldFont.backgroundColor = UIColor.white
+            buttonItalicFont.backgroundColor = UIColor.white
         }
         
         if let delegate = delegate {
@@ -270,7 +282,10 @@ class BottomStyleView: UIView {
     
     @objc private func boldFontButtonTapped(_ sender: UIButton) {
         buttonChangeColor(button: sender)
-        
+        if buttonBoldFont.backgroundColor == UIColor(named: "Coral") {
+            buttonItalicFont.backgroundColor = UIColor.white
+            buttonMainText.backgroundColor = UIColor.white
+        }
         if let delegate = delegate {
             delegate.boldFontButtonTapped()
         }
@@ -278,16 +293,26 @@ class BottomStyleView: UIView {
     
     @objc private func italicFontButtonTapped(_ sender: UIButton) {
         buttonChangeColor(button: sender)
+        if buttonItalicFont.backgroundColor == UIColor(named: "Coral") {
+            buttonTitle.backgroundColor = UIColor.white
+            buttonSubTitle.backgroundColor = UIColor.white
+            buttonName.backgroundColor = UIColor.white
+            buttonBoldFont.backgroundColor = UIColor.white
+        }
         if let delegate = delegate {
             delegate.italicFontButtonTapped()
         }
     }
     
     @objc private func underlineFontButtonTapped(_ sender: UIButton) {
-        buttonChangeColor(button: sender)
+        if let delegate = delegate {
+            delegate.underlineFontButtonTapped()
+        }
     }
     
     @objc private func strikethroughFontButtonTapped(_ sender: UIButton) {
-        buttonChangeColor(button: sender)
+        if let delegate = delegate {
+            delegate.strikethroughFontButtonTapped()
+        }
     }
 }

@@ -5,7 +5,7 @@
 //  Created by Татьяна Лузанова on 10.02.2022.
 //
 
-import Foundation
+import UIKit
 
 protocol BottomStackViewDelegate {
     
@@ -50,7 +50,9 @@ protocol AddNoteViewOutput: AnyObject {
     
     func viewWillAppear()
     
-    func currentModel () -> Note
+    func currentModel() -> Note
+    
+    func currentFont() -> UIFont
     
     func addTitle(title: String)
 
@@ -64,6 +66,24 @@ protocol AddNoteViewOutput: AnyObject {
     
     func addNewNoteButtonTapped()
     
-    func deleteNoteButtonTapped() 
+    func deleteNoteButtonTapped()
+    
+    func fontForBoldStyle(font: UIFont)
+    
+    func fontForItalicStyle(font: UIFont)
+    
+    func fontForUnderlineStyle()
+    
+    func fontForStrikethroughStyle()
+    
+    func fontForNameStyle(font: UIFont)
+    
+    func fontForTitleStyle(font: UIFont)
+    
+    func fontForSubTitleStyle(font: UIFont)
+    
+    func fontForMainTextStyle(font: UIFont)
+    
+    
 }
 
