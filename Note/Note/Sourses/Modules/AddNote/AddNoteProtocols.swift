@@ -43,16 +43,18 @@ protocol BottomStyleViewDelegate {
 
 protocol AddNoteViewInput: AnyObject {
     
-    func reloadUI()
+    func changeTextColor()
+    
+    func updateFont()
 }
 
 protocol AddNoteViewOutput: AnyObject {
     
-    func viewWillAppear()
-    
     func currentModel() -> Note
     
-    func currentFont() -> UIFont
+    func currentFont() -> UIFont?
+    
+    func currentColor() -> UIColor?
     
     func addTitle(title: String)
 
@@ -68,22 +70,22 @@ protocol AddNoteViewOutput: AnyObject {
     
     func deleteNoteButtonTapped()
     
-    func fontForBoldStyle(font: UIFont)
+    func fontForBoldStyle()
     
-    func fontForItalicStyle(font: UIFont)
+    func fontForItalicStyle()
     
     func fontForUnderlineStyle()
     
     func fontForStrikethroughStyle()
     
-    func fontForNameStyle(font: UIFont)
+    func fontForNameStyle()
     
-    func fontForTitleStyle(font: UIFont)
+    func fontForTitleStyle()
     
-    func fontForSubTitleStyle(font: UIFont)
+    func fontForSubTitleStyle()
     
-    func fontForMainTextStyle(font: UIFont)
+    func fontForMainTextStyle()
     
-    
+    func changeTextColor()
 }
 

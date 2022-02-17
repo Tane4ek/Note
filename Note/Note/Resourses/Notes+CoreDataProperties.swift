@@ -2,7 +2,7 @@
 //  Notes+CoreDataProperties.swift
 //  Note
 //
-//  Created by Татьяна Лузанова on 16.02.2022.
+//  Created by Поздняков Игорь Николаевич on 17.02.2022.
 //
 //
 
@@ -21,6 +21,7 @@ extension Notes {
     @NSManaged public var text: String?
     @NSManaged public var date: Date?
     @NSManaged public var textStyle: String?
+    @NSManaged public var textColor: String?
 
 }
 

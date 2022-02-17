@@ -16,8 +16,8 @@ final class AddNoteModuleConfigurator {
         self.serviceContainer = serviceContainer
     }
     
-    func configure(note: Note?, fontStyle: UIFont) -> AddNoteViewController {
-        let presenter = AddNotePresenter(note: note, fontStyle: fontStyle)
+    func configure(note: Note?) -> AddNoteViewController {
+        let presenter = AddNotePresenter(note: note)
         let view = AddNoteViewController(presenter: presenter)
         let router = AddNoteRouter(serviceContainer: serviceContainer)
 

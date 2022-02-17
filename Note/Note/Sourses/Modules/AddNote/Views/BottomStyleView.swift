@@ -177,7 +177,10 @@ class BottomStyleView: UIView {
         buttonUnderlineFont = styleButtonsStyle(name: "U")
         buttonUnderlineFont.titleLabel?.font = FontStyle.mainText
         let attributeUnderlineString: NSMutableAttributedString =  NSMutableAttributedString(string: "U")
-        attributeUnderlineString.addAttribute(NSAttributedString.Key.underlineStyle, value: 2, range: NSMakeRange(0, attributeUnderlineString.length))
+        attributeUnderlineString.addAttribute(
+            NSAttributedString.Key.underlineStyle,
+            value: 2,
+            range: NSMakeRange(0, attributeUnderlineString.length))
         buttonUnderlineFont.setAttributedTitle(attributeUnderlineString, for: .normal)
         buttonUnderlineFont.addTarget(self, action: #selector(underlineFontButtonTapped(_:)), for: .touchUpInside)
         styleFontStackView.addArrangedSubview(buttonUnderlineFont)
@@ -185,7 +188,10 @@ class BottomStyleView: UIView {
         buttonStrikethroughFont = styleButtonsStyle(name: "S")
         buttonStrikethroughFont.titleLabel?.font = FontStyle.mainText
         let attributeStrikethroughString: NSMutableAttributedString =  NSMutableAttributedString(string: "S")
-        attributeStrikethroughString.addAttribute(NSAttributedString.Key.strikethroughStyle, value: 2, range: NSMakeRange(0, attributeStrikethroughString.length))
+        attributeStrikethroughString.addAttribute(
+            NSAttributedString.Key.strikethroughStyle,
+            value: 2,
+            range: NSMakeRange(0, attributeStrikethroughString.length))
         buttonStrikethroughFont.setAttributedTitle(attributeStrikethroughString, for: .normal)
         buttonStrikethroughFont.addTarget(self, action: #selector(strikethroughFontButtonTapped(_:)), for: .touchUpInside)
         styleFontStackView.addArrangedSubview(buttonStrikethroughFont)

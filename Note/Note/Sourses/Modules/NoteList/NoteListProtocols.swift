@@ -27,5 +27,6 @@ protocol NoteListViewOutput: AnyObject {
 }
 
 protocol SwipeableCollectionViewCellDelegate: AnyObject {
+    
     func hiddenConteinerViewTapped(inCell cell: UICollectionViewCell)
 }

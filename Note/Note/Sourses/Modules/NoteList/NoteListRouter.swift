@@ -18,9 +18,9 @@ class NoteListRouter {
         self.serviceContainer = serviceContainer
     }
     
-    func showAddNoteModule(note: Note, fontStyle: UIFont) {
+    func showAddNoteModule(note: Note) {
         let configurator = AddNoteModuleConfigurator(serviceContainer: serviceContainer)
-        let addNoteViewController = configurator.configure(note: note, fontStyle: fontStyle)
+        let addNoteViewController = configurator.configure(note: note)
         view?.navigationController?.pushViewController(addNoteViewController, animated: true)
     }
 }

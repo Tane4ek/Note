@@ -149,7 +149,9 @@ extension NoteListViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = noteListCollectionView.dequeueReusableCell(withReuseIdentifier: NoteListCollectionViewCell.reusedId, for: indexPath) as! NoteListCollectionViewCell
+        let cell = noteListCollectionView.dequeueReusableCell(
+            withReuseIdentifier: NoteListCollectionViewCell.reusedId,
+            for: indexPath) as! NoteListCollectionViewCell
         let modelOfIndex = presenter.modelOfIndex(index: indexPath.row)
         cell.configure(model: modelOfIndex)
         return cell
@@ -158,7 +160,9 @@ extension NoteListViewController: UICollectionViewDataSource {
 
 // MARK: - UICollectionViewDelegateFlowLayout
 extension NoteListViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: view.frame.width, height: 100)
     }
 }

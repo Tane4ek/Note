@@ -25,12 +25,18 @@ extension NoteListPresenter: NoteListViewOutput {
     
     func didSelectRowAt(index: Int) {
         let currentNote = models[index]
-        router?.showAddNoteModule(note: currentNote, fontStyle: FontStyle.normal.font)
+        router?.showAddNoteModule(note: currentNote)
     }
     
     func buttonAddTapped() {
-        let emptyNote = Note(id: UUID(), name: "", text: "", dateOfLastChange: Date.now, styleText: FontStyle.normal.rawValue)
-        router?.showAddNoteModule(note: emptyNote, fontStyle: FontStyle.normal.font)
+        let emptyNote = Note(
+            id: UUID(),
+            name: "",
+            text: "",
+            dateOfLastChange: Date.now,
+            styleText: FontStyle.normal.rawValue,
+            textColor: TextColor.normal.rawValue)
+        router?.showAddNoteModule(note: emptyNote)
     }
     
     func numberOfItems() -> Int {

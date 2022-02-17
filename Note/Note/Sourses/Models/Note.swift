@@ -14,4 +14,5 @@ struct Note {
     var text: String
     let dateOfLastChange: Date
     var styleText: String
+    var textColor: String
 }

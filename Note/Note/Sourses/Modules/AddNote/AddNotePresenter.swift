@@ -14,29 +14,31 @@ class AddNotePresenter {
     var router: AddNoteRouter?
     var noteService: NoteService?
     
-    var fontStyle: UIFont
-    
     var note: Note
     let isEditMode: Bool
     
-    init(note: Note?, fontStyle: UIFont){
+    init(note: Note?){
         self.isEditMode = note != nil
-        self.note = note ?? Note(id: UUID(), name: "", text: "", dateOfLastChange: Date.now, styleText: FontStyle.normal.rawValue)
-        self.fontStyle = fontStyle
+        self.note = note ?? Note(id: UUID(),
+                                 name: "",
+                                 text: "",
+                                 dateOfLastChange: Date.now,
+                                 styleText: FontStyle.normal.rawValue,
+                                 textColor: TextColor.normal.rawValue)
     }
 }
 extension AddNotePresenter: AddNoteViewOutput {
-    
-    func viewWillAppear() {
-        view?.reloadUI()
-    }
     
     func currentModel() -> Note {
         return note
     }
     
-    func currentFont() -> UIFont {
-        return fontStyle
+    func currentColor() -> UIColor? {
+        return TextColor(rawValue: note.textColor)?.color
+    }
+    
+    func currentFont() -> UIFont? {
+        return FontStyle(rawValue: note.styleText)?.font
     }
     
     func addTitle(title: String) {
@@ -70,7 +72,12 @@ extension AddNotePresenter: AddNoteViewOutput {
         }
     
     func addNewNoteButtonTapped() {
-        let emptyNote = Note(id: UUID(), name: "", text: "", dateOfLastChange: Date.now, styleText: FontStyle.normal.rawValue)
+        let emptyNote = Note(id: UUID(),
+                             name: "",
+                             text: "",
+                             dateOfLastChange: Date.now,
+                             styleText: FontStyle.normal.rawValue,
+                             textColor: TextColor.normal.rawValue)
         router?.showAddNoteModule(note: emptyNote)
         }
     
@@ -79,24 +86,22 @@ extension AddNotePresenter: AddNoteViewOutput {
             router?.returnToNoteListModule()
     }
     
-    func fontForBoldStyle(font: UIFont) {
-        if font != FontStyle.bold.font {
+    func fontForBoldStyle() {
+        if note.styleText != FontStyle.bold.rawValue {
             note.styleText = FontStyle.bold.rawValue
-            fontStyle = FontStyle.bold.font
-        } else if font == FontStyle.bold.font {
+        } else {
             note.styleText = FontStyle.normal.rawValue
-            fontStyle = FontStyle.normal.font
         }
+        view?.updateFont()
     }
     
-    func fontForItalicStyle(font: UIFont) {
-        if font != FontStyle.italic.font {
+    func fontForItalicStyle() {
+        if note.styleText != FontStyle.italic.rawValue {
             note.styleText = FontStyle.italic.rawValue
-            fontStyle = FontStyle.italic.font
-        } else if font == FontStyle.italic.font {
+        } else {
             note.styleText = FontStyle.normal.rawValue
-            fontStyle = FontStyle.normal.font
         }
+        view?.updateFont()
     }
     
     func fontForUnderlineStyle() {
@@ -107,41 +112,47 @@ extension AddNotePresenter: AddNoteViewOutput {
         router?.showAlert(title: "Strikethrough style", message: "Will be available soon")
     }
     
-    func fontForNameStyle(font: UIFont) {
-        if font != FontStyle.name.font {
+    func fontForNameStyle() {
+        if note.styleText != FontStyle.name.rawValue {
             note.styleText = FontStyle.name.rawValue
-            fontStyle = FontStyle.name.font
-        } else if font == FontStyle.name.font {
+        } else {
             note.styleText = FontStyle.normal.rawValue
-            fontStyle = FontStyle.normal.font
         }
+        view?.updateFont()
     }
     
-    func fontForTitleStyle(font: UIFont) {
-        if font != FontStyle.title.font {
+    func fontForTitleStyle() {
+        if note.styleText != FontStyle.title.rawValue {
             note.styleText = FontStyle.title.rawValue
-            fontStyle = FontStyle.title.font
-        } else if font == FontStyle.title.font {
+        } else {
             note.styleText = FontStyle.normal.rawValue
-            fontStyle = FontStyle.normal.font
         }
+        view?.updateFont()
     }
     
-    func fontForSubTitleStyle(font: UIFont) {
-        if font != FontStyle.subTitle.font {
+    func fontForSubTitleStyle() {
+        if note.styleText != FontStyle.subTitle.rawValue {
             note.styleText = FontStyle.subTitle.rawValue
-            fontStyle = FontStyle.subTitle.font
-        } else if font == FontStyle.subTitle.font {
+        } else {
             note.styleText = FontStyle.normal.rawValue
-            fontStyle = FontStyle.normal.font
         }
+        view?.updateFont()
     }
     
-    func fontForMainTextStyle(font: UIFont) {
-        if font != FontStyle.normal.font {
+    func fontForMainTextStyle() {
+        if note.styleText != FontStyle.normal.rawValue {
             note.styleText = FontStyle.normal.rawValue
-            fontStyle = FontStyle.normal.font
-        } 
+        }
+        view?.updateFont()
+    }
+    
+    func changeTextColor() {
+        if note.textColor != TextColor.coral.rawValue {
+            note.textColor = TextColor.coral.rawValue
+        } else {
+            note.textColor = TextColor.normal.rawValue
+        }
+        view?.changeTextColor()
     }
 }
 

@@ -45,7 +45,7 @@ class AddNoteViewController: UIViewController {
     private var bottomAnchorbottomStyleView: NSLayoutConstraint?
     private var bottomAnchorbottomStackView: NSLayoutConstraint?
     
-    //    MARK: - Init
+//    MARK: - Init
     init(presenter: AddNoteViewOutput) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
@@ -55,23 +55,28 @@ class AddNoteViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Life circle
+//  MARK: - Life circle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        presenter.viewWillAppear()
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(self.keyboardWillShow(notification:)),
+                                               name: UIResponder.keyboardWillShowNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(self.keyboardWillHide(notification:)),
+                                               name: UIResponder.keyboardWillHideNotification,
+                                               object: nil)
     }
     
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
     
-    //    MARK: Setup UI
+//    MARK: Setup UI
     private func setupUI() {
         view.backgroundColor = .white
         setupBackButton()
@@ -119,7 +124,7 @@ class AddNoteViewController: UIViewController {
     
     private func setupTextView() {
         textView.text = presenter.currentModel().text
-        textView.textColor = UIColor.black
+        textView.textColor = presenter.currentColor()
         textView.textAlignment = .left
         textView.font = presenter.currentFont()
         textView.delegate = self
@@ -141,7 +146,7 @@ class AddNoteViewController: UIViewController {
         view.addSubview(bottomStyleView)
     }
     
-    //    MARK: - Layout
+//    MARK: - Layout
     private func setupLayout() {
         let bottomAnchorbottomStyleView = bottomStyleView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         let bottomAnchorbottomStackView = bottomStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
@@ -224,8 +229,12 @@ class AddNoteViewController: UIViewController {
 
 //  MARK: - AddNoteViewInput
 extension AddNoteViewController: AddNoteViewInput {
-    func reloadUI() {
-        
+    func changeTextColor() {
+        textView.textColor = presenter.currentColor()
+    }
+    
+    func updateFont() {
+        textView.font = presenter.currentFont()
     }
 }
 
@@ -291,47 +300,40 @@ extension AddNoteViewController: BottomStyleViewDelegate {
     }
     
     func buttonPaintbrushTapped() {
-       
+        presenter.changeTextColor()
     }
     
     func nameButtonTapped() {
-        presenter.fontForNameStyle(font: presenter.currentFont())
-        textView.font = presenter.currentFont()
+        presenter.fontForNameStyle()
     }
     
     func titleButtonTapped() {
-        presenter.fontForTitleStyle(font: presenter.currentFont())
-        textView.font = presenter.currentFont()
+        presenter.fontForTitleStyle()
     }
     
     func subTitleButtonTapped() {
-        presenter.fontForSubTitleStyle(font: presenter.currentFont())
-        textView.font = presenter.currentFont()
+        presenter.fontForSubTitleStyle()
     }
     
     func mainTextButtonTapped() {
-        presenter.fontForMainTextStyle(font: presenter.currentFont())
-        textView.font = presenter.currentFont()
+        presenter.fontForMainTextStyle()
     }
     
     func boldFontButtonTapped() {
-        presenter.fontForBoldStyle(font: presenter.currentFont())
+        presenter.fontForBoldStyle()
         textView.font = presenter.currentFont()
     }
     
     func italicFontButtonTapped() {
-        presenter.fontForItalicStyle(font: presenter.currentFont())
-        textView.font = presenter.currentFont()
+        presenter.fontForItalicStyle()
     }
     
     func underlineFontButtonTapped() {
         presenter.fontForUnderlineStyle()
-        textView.font = presenter.currentFont()
     }
     
     func strikethroughFontButtonTapped() {
         presenter.fontForStrikethroughStyle()
-        textView.font = presenter.currentFont()
     }
 }
 
