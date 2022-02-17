@@ -23,7 +23,12 @@ extension NoteServiceImpl: NoteService {
     
     func notes() -> [Note] {
         var needAdd = true
-        let NoteForExample = Note(id: UUID(), name: "First", text: "Is is my first note", dateOfLastChange: Date.now, styleText: FontStyle.normal.rawValue, textColor: TextColor.normal.rawValue)
+        let NoteForExample = Note(id: UUID(),
+                                  name: "First",
+                                  text: "Is is my first note",
+                                  dateOfLastChange: Date.now,
+                                  styleText: FontStyle.normal.rawValue,
+                                  textColor: TextColor.normal.rawValue)
         
         if noteStorageImpl.notesFromDataBase().isEmpty && needAdd {
             noteStorageImpl.updateInDataBase(note: NoteForExample)
